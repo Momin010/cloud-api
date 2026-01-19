@@ -9,11 +9,16 @@ export default async function handler(req: any, res: any) {
         return;
     }
 
-    if (req.method !== 'GET') {
+    if (req.method !== 'GET' && req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { file } = req.query;
+    let file;
+    if (req.method === 'GET') {
+        file = req.query.file;
+    } else if (req.method === 'POST') {
+        file = req.body?.file;
+    }
 
     if (!file) {
         return res.status(400).json({ error: 'Missing file parameter' });
